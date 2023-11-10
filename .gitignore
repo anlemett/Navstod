@@ -3,6 +3,7 @@ pipenv/*
 *.csv
 *.iml
 *.xml
+*.png
 *.zip
 *.z7
 
