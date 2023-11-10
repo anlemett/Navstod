@@ -6,4 +6,5 @@ pipenv/*
 *.png
 *.zip
 *.z7
+*.h5
 
