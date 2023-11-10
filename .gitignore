@@ -1,5 +1,6 @@
 __pycache__/
 pipenv/*
+.ipynb_checkpoints/*
 *.csv
 *.iml
 *.xml
