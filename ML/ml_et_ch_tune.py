@@ -5,6 +5,7 @@ import time
 import os
 import numpy as np
 import pandas as pd
+import random
 #import sys
 
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
@@ -21,8 +22,8 @@ DATA_DIR = "Data"
 #BINARY = True
 BINARY = False
 
-POST_OP = True
-#POST_OP = False
+#POST_OP = True
+POST_OP = False
 
 features = [
             'number_of_sac', 'total_sac_duration',
@@ -30,11 +31,13 @@ features = [
             'min_sac_duration', 'max_sac_duration',
             'mean_fixation', 'median_fixation', 'std_fixation',
             'min_fixation', 'max_fixation',
-            'mean_pup_diam', 'median_pup_diam', 'std_pup_diam',
-            'min_pup_diam', 'max_pup_diam',
+            'mean_pup_diam_left', 'median_pup_diam_left', 'std_pup_diam_left',
+            'min_pup_diam_left', 'max_pup_diam_left',
+            'mean_pup_diam_right', 'median_pup_diam_right', 'std_pup_diam_right',
+            'min_pup_diam_right', 'max_pup_diam_right'
             ]
 
-df = pd.read_csv(os.path.join(DATA_DIR, "ML_ET_CH.csv"), sep=' ', dtype={'date':str})
+df = pd.read_csv(os.path.join(DATA_DIR, "ML_ET_CH_norm.csv"), sep=' ', dtype={'date':str})
 
 if POST_OP:
     df = df[df.date!="230324"]
@@ -46,9 +49,10 @@ X_df = df[features]
     
 if BINARY:
     scores = [1 if score < 4 else 2 for score in scores]
-#else:
-#    scores = [1 if score < 2 else 3 if score > 3 else 2 for score in scores]
+else:
+    scores = [1 if score < 2 else 3 if score > 3 else 2 for score in scores]
 
+#random.shuffle(scores)
 
 # Spit the data into train and test
 X_train_df, X_test_df, y_train, y_test = train_test_split(
@@ -80,14 +84,14 @@ best_rf = search.best_estimator_
 print('Best hyperparameters:',  search.best_params_)
 #BINARY = True
 #POST_OP = True
-#test_size=0.2, shuffle=True, random_state=0 -> 'max_depth': 11, 'n_estimators': 188
+#test_size=0.1, shuffle=True, random_state=0 -> 'max_depth': 2, 'n_estimators': 245
 #POST_OP = False
-#test_size=0.2, shuffle=True, random_state=0 -> 'max_depth': 15, 'n_estimators': 121
+#test_size=0.1, shuffle=True, random_state=0 -> 'max_depth': 14, 'n_estimators': 369
 #BINARY = False
 #POST_OP = True
-#test_size=0.2, shuffle=True, random_state=0 -> 'max_depth': 13, 'n_estimators': 267
+#test_size=0.1, shuffle=True, random_state=0 -> 'max_depth': 6, 'n_estimators': 482
 #POST_OP = False
-#test_size=0.2, shuffle=True, random_state=0 -> 'max_depth': 15, 'n_estimators': 305
+#test_size=0.1, shuffle=True, random_state=0 -> 'max_depth': 16, 'n_estimators': 134
 
 y_pred = best_rf.predict(X_test_df)
 

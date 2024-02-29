@@ -32,7 +32,7 @@ def add_run(df, filename, run):
 df = pd.DataFrame(columns=['date', 'run', 'timeInterval',
                            'score', 'post_op_score'])
 
-full_filename = os.path.join(DATA_DIR_230324, "Wl1_Friedrik_230324_093826.csv")
+full_filename = os.path.join(DATA_DIR_230324, "Wl1_Fredrik_230324_093826.csv")
 df = add_run(df, full_filename, 1)
 
 full_filename = os.path.join(DATA_DIR_230324, "Wl2_Fredrik_230324_112649.csv")

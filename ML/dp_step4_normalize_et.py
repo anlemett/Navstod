@@ -39,6 +39,18 @@ def addPilot(new_df, df):
     df['Pupil_diameter_filtered'] = df.apply(lambda row: normilize(pup_diam_min, pup_diam_max,
                                                  row['Pupil diameter filtered']), axis=1)
 
+    pup_diam_left_min = df["Pupil diameter left"].min()
+    pup_diam_left_max = df["Pupil diameter left"].max()
+
+    df['Pupil_diameter_left'] = df.apply(lambda row: normilize(pup_diam_left_min, pup_diam_left_max,
+                                                 row['Pupil diameter left']), axis=1)
+
+    pup_diam_right_min = df["Pupil diameter right"].min()
+    pup_diam_right_max = df["Pupil diameter right"].max()
+
+    df['Pupil_diameter_right'] = df.apply(lambda row: normilize(pup_diam_right_min, pup_diam_right_max,
+                                                 row['Pupil diameter right']), axis=1)
+
     saccade_df = df[df["Eye movement type"]=='Saccade']
     fixation_df = df[df["Eye movement type"]=='Fixation']
 
@@ -82,7 +94,8 @@ Fredrik_df = pd.concat([Fredrik_df, date_df])
 
 new_df = addPilot(new_df, Fredrik_df)
 
-new_df = new_df[['date', 'run', 'timeInterval', 'Pupil_diameter_filtered', 
+new_df = new_df[['date', 'run', 'timeInterval', 'Pupil_diameter_filtered',
+                 'Pupil_diameter_left', 'Pupil_diameter_right',
                  'Gaze_event_duration', 'Eye movement type']]
 
 full_filename = os.path.join(DATA_DIR, "eye_tracking_all_norm.csv")

@@ -14,9 +14,9 @@ import math
 from statistics import mean
 import matplotlib.pyplot as plt
 
-run_num = 4
-#post_op = False
-post_op = True
+run_num = 1
+post_op = False
+#post_op = True
 
 #filename = "av_metrics" + str(run_num) + ".csv"
 filename = "av_metrics_" + date + "_run" + str(run_num) + ".csv"
@@ -37,7 +37,7 @@ time_intervals = list(metric_df['timeInterval'])
 
 if date == "230324":
     if run_num == 1:
-        filename = "Wl1_Friedrik_230324_093826.csv"
+        filename = "Wl1_Fredrik_230324_093826.csv"
     else:
         filename = "Wl2_Fredrik_230324_112649.csv"
 elif date == "230517":

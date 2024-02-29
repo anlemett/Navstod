@@ -33,7 +33,7 @@ time_intervals = list(metric_df['timeInterval'])
 
 if date == "230324":
     if run_num == 1:
-        filename = "Wl1_Friedrik_230324_093826.csv"
+        filename = "Wl1_Fredrik_230324_093826.csv"
     else:
         filename = "Wl2_Fredrik_230324_112649.csv"
 elif date == "230517":

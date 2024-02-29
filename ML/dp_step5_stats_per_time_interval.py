@@ -8,6 +8,9 @@ from itertools import groupby
 
 DATA_DIR = "Data"
 
+NORMALIZED = True
+#NORMALIZED = False
+
 def get_stats(lst):
     mean_lst = mean(lst) if lst else 0
     median_lst = median(lst) if lst else 0
@@ -31,7 +34,10 @@ def add_run_stats(new_df, run_df):
         # Saccades duration and number
 
         saccades_df = ti_df[ti_df['Eye movement type']=='Saccade']
-        lst = list(saccades_df['Gaze_event_duration'].dropna())
+        if NORMALIZED:
+            lst = list(saccades_df['Gaze_event_duration'].dropna())
+        else:
+            lst = list(saccades_df['Gaze event duration'].dropna())
     
         # removing consecutive duplicates
         saccades_list = [i[0] for i in groupby(lst)]
@@ -45,7 +51,10 @@ def add_run_stats(new_df, run_df):
         # Fixation duration
         
         fixation_df = ti_df[ti_df['Eye movement type']=='Fixation']
-        lst = list(fixation_df['Gaze_event_duration'].dropna())
+        if NORMALIZED:
+            lst = list(fixation_df['Gaze_event_duration'].dropna())
+        else:
+            lst = list(fixation_df['Gaze event duration'].dropna())
     
         # removing consecutive duplicates
         interval_fixation = [i[0] for i in groupby(lst)]
@@ -54,12 +63,24 @@ def add_run_stats(new_df, run_df):
          min_fix_duration, max_fix_duration) = get_stats(interval_fixation)
             
         # Pupil diameter
-    
-        interval_pup_diam = list(ti_df['Pupil_diameter_filtered'].dropna())
+        if NORMALIZED:
+            interval_pup_diam = list(ti_df['Pupil_diameter_filtered'].dropna())
+            interval_pup_diam_left = list(ti_df['Pupil_diameter_left'].dropna())
+            interval_pup_diam_right = list(ti_df['Pupil_diameter_right'].dropna())
+        else:
+            interval_pup_diam = list(ti_df['Pupil diameter filtered'].dropna())
+            interval_pup_diam_left = list(ti_df['Pupil diameter left'].dropna())
+            interval_pup_diam_right = list(ti_df['Pupil diameter right'].dropna())
     
         (mean_pup_diam, median_pup_diam, std_pup_diam,
          min_pup_diam, max_pup_diam) = get_stats(interval_pup_diam)
-    
+        
+        (mean_pup_diam_left, median_pup_diam_left, std_pup_diam_left,
+         min_pup_diam_left, max_pup_diam_left) = get_stats(interval_pup_diam_left)
+        
+        (mean_pup_diam_right, median_pup_diam_right, std_pup_diam_right,
+         min_pup_diam_right, max_pup_diam_right) = get_stats(interval_pup_diam_right)
+        
         new_df = pd.concat([new_df, pd.DataFrame({
                             'date': [date],
                             'run': [run],
@@ -81,13 +102,26 @@ def add_run_stats(new_df, run_df):
                             'std_pup_diam': [std_pup_diam],
                             'min_pup_diam': [min_pup_diam],
                             'max_pup_diam': [max_pup_diam],
+                            'mean_pup_diam_left': [mean_pup_diam_left],
+                            'median_pup_diam_left': [median_pup_diam_left],
+                            'std_pup_diam_left': [std_pup_diam_left],
+                            'min_pup_diam_left': [min_pup_diam_left],
+                            'max_pup_diam_left': [max_pup_diam_left],
+                            'mean_pup_diam_right': [mean_pup_diam_right],
+                            'median_pup_diam_right': [median_pup_diam_right],
+                            'std_pup_diam_right': [std_pup_diam_right],
+                            'min_pup_diam_right': [min_pup_diam_right],
+                            'max_pup_diam_right': [max_pup_diam_right],
                             })])
     
     return new_df
 
 
 new_df = pd.DataFrame()
-full_filename = os.path.join(DATA_DIR, "eye_tracking_all_norm.csv")
+if NORMALIZED:
+    full_filename = os.path.join(DATA_DIR, "eye_tracking_all_norm.csv")
+else:
+    full_filename = os.path.join(DATA_DIR, "eye_tracking_all.csv")
 df = pd.read_csv(full_filename, sep= ' ', dtype={"date":str})
 
 date_df = df[df.date == "230324"]
@@ -123,5 +157,10 @@ new_df = add_run_stats(new_df, run_df)
 run_df = date_df[date_df.run == 4]
 new_df = add_run_stats(new_df, run_df)
 
-new_df.to_csv(os.path.join(DATA_DIR, "et_stats_per_slot.csv"), sep=' ', encoding='utf-8',
-              float_format='%.8f', index = False, header = True)   
+if NORMALIZED:
+    new_df.to_csv(os.path.join(DATA_DIR, "et_stats_per_slot_norm.csv"), sep=' ',
+            encoding='utf-8', float_format='%.8f', index = False, header = True)   
+else:
+    new_df.to_csv(os.path.join(DATA_DIR, "et_stats_per_slot.csv"), sep=' ',
+            encoding='utf-8', float_format='%.8f', index = False, header = True)   
+    

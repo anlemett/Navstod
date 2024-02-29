@@ -34,11 +34,13 @@ features = [
             'min_sac_duration', 'max_sac_duration',
             'mean_fixation', 'median_fixation', 'std_fixation',
             'min_fixation', 'max_fixation',
-            'mean_pup_diam', 'median_pup_diam', 'std_pup_diam',
-            'min_pup_diam', 'max_pup_diam',
+            'mean_pup_diam_left', 'median_pup_diam_left', 'std_pup_diam_left',
+            'min_pup_diam_left', 'max_pup_diam_left',
+            'mean_pup_diam_right', 'median_pup_diam_right', 'std_pup_diam_right',
+            'min_pup_diam_right', 'max_pup_diam_right'
             ]
 
-df = pd.read_csv(os.path.join(DATA_DIR, "ML_ET_CH.csv"), sep=' ', dtype={'date':str})
+df = pd.read_csv(os.path.join(DATA_DIR, "ML_ET_CH_norm.csv"), sep=' ', dtype={'date':str})
 
 if POST_OP:
     df = df[df.date!="230324"]
@@ -68,8 +70,8 @@ rec_per_fold = []
 f1_per_fold = []
 
 if FEATURE_IMPORTANCE:
-    gini_kfold_importances = np.empty(shape=[num_folds, 17])
-    perm_kfold_importances = np.empty(shape=[num_folds, 17])
+    gini_kfold_importances = np.empty(shape=[num_folds, 22])
+    perm_kfold_importances = np.empty(shape=[num_folds, 22])
     
 fold_no = 1
 for train_idx, test_idx in kfold.split(scores):
@@ -81,21 +83,23 @@ for train_idx, test_idx in kfold.split(scores):
 
     if POST_OP:
         if BINARY:
-            md = 11
-            ne = 188
+            md = 2
+            ne = 245
         else:
-            md = 13
-            ne = 267
+            md = 6
+            ne = 482
     else:
         if BINARY:
-            md = 15
-            ne = 121
+            md = 14
+            ne = 369
         else:
-            md = 15
-            ne = 305
+            md = 16
+            ne = 134
     
     clf = RandomForestClassifier(
         class_weight='balanced',
+        bootstrap=False,
+        max_features=None,
         max_depth=md,
         n_estimators=ne
         )
