@@ -19,11 +19,13 @@ from scipy.stats import randint
 
 DATA_DIR = "Data"
 
-#BINARY = True
-BINARY = False
+RANDOM_STATE = 0
 
-#POST_OP = True
-POST_OP = False
+BINARY = True
+#BINARY = False
+
+POST_OP = True
+#POST_OP = False
 
 features = [
             'number_of_sac', 'total_sac_duration',
@@ -34,10 +36,17 @@ features = [
             'mean_pup_diam_left', 'median_pup_diam_left', 'std_pup_diam_left',
             'min_pup_diam_left', 'max_pup_diam_left',
             'mean_pup_diam_right', 'median_pup_diam_right', 'std_pup_diam_right',
-            'min_pup_diam_right', 'max_pup_diam_right'
+            'min_pup_diam_right', 'max_pup_diam_right',
+            'mean_HR', 'median_HR', 'std_HR', 'min_HR', 'max_HR',
+            #'com_duration'
             ]
 
-df = pd.read_csv(os.path.join(DATA_DIR, "ML_ET_CH_norm.csv"), sep=' ', dtype={'date':str})
+print(features)
+
+#df = pd.read_csv(os.path.join(DATA_DIR, "ML_ET_CH_norm.csv"), sep=' ', dtype={'date':str})
+df = pd.read_csv(os.path.join(DATA_DIR, "ML_ET_HR_CH_norm.csv"), sep=' ', dtype={'date':str})
+#df = pd.read_csv(os.path.join(DATA_DIR, "ML_ET_CH_COM_norm.csv"), sep=' ', dtype={'date':str})
+#df = pd.read_csv(os.path.join(DATA_DIR, "ML_ET_HR_COM_CH_norm.csv"), sep=' ', dtype={'date':str})
 
 if POST_OP:
     df = df[df.date!="230324"]
@@ -56,13 +65,13 @@ else:
 
 # Spit the data into train and test
 X_train_df, X_test_df, y_train, y_test = train_test_split(
-    X_df, scores, test_size=0.1, shuffle=True, random_state=0
+    X_df, scores, test_size=0.2, shuffle=True, random_state=RANDOM_STATE
     )
 
 clf = RandomForestClassifier(class_weight='balanced',
                              bootstrap=False,
                              max_features=None,
-                             random_state=0)
+                             random_state=RANDOM_STATE)
 
 # Use random search to find the best hyperparameters
 param_dist = {'n_estimators': randint(50,500),
@@ -72,7 +81,8 @@ param_dist = {'n_estimators': randint(50,500),
 search = RandomizedSearchCV(clf, 
                             param_distributions = param_dist, 
                             n_iter=5, 
-                            cv=10)
+                            cv=10,
+                            random_state=RANDOM_STATE)
 
 # Fit the search object to the data
 search.fit(X_train_df, y_train)
@@ -84,7 +94,7 @@ best_rf = search.best_estimator_
 print('Best hyperparameters:',  search.best_params_)
 #BINARY = True
 #POST_OP = True
-#test_size=0.1, shuffle=True, random_state=0 -> 'max_depth': 2, 'n_estimators': 245
+#test_size=0.1, shuffle=True, random_state=0 -> 'max_depth': 12, 'n_estimators': 183
 #POST_OP = False
 #test_size=0.1, shuffle=True, random_state=0 -> 'max_depth': 14, 'n_estimators': 369
 #BINARY = False

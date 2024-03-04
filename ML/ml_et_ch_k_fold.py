@@ -19,6 +19,8 @@ from sklearn.inspection import permutation_importance
 
 DATA_DIR = "Data"
 
+RANDOM_STATE = 0
+
 BINARY = True
 #BINARY = False
 
@@ -37,10 +39,17 @@ features = [
             'mean_pup_diam_left', 'median_pup_diam_left', 'std_pup_diam_left',
             'min_pup_diam_left', 'max_pup_diam_left',
             'mean_pup_diam_right', 'median_pup_diam_right', 'std_pup_diam_right',
-            'min_pup_diam_right', 'max_pup_diam_right'
+            'min_pup_diam_right', 'max_pup_diam_right',
+            'mean_HR', 'median_HR', 'std_HR', 'min_HR', 'max_HR',
+            #'com_duration'
             ]
 
-df = pd.read_csv(os.path.join(DATA_DIR, "ML_ET_CH_norm.csv"), sep=' ', dtype={'date':str})
+number_of_features = len(features)
+
+#df = pd.read_csv(os.path.join(DATA_DIR, "ML_ET_CH_norm.csv"), sep=' ', dtype={'date':str})
+df = pd.read_csv(os.path.join(DATA_DIR, "ML_ET_HR_CH_norm.csv"), sep=' ', dtype={'date':str})
+#df = pd.read_csv(os.path.join(DATA_DIR, "ML_ET_CH_COM_norm.csv"), sep=' ', dtype={'date':str})
+#df = pd.read_csv(os.path.join(DATA_DIR, "ML_ET_HR_COM_CH_norm.csv"), sep=' ', dtype={'date':str})
 
 if POST_OP:
     df = df[df.date!="230324"]
@@ -59,7 +68,7 @@ if BINARY:
 
 # Define the K-fold Cross Validator
 num_folds = 10
-kfold = model_selection.KFold(n_splits=num_folds, shuffle=True, random_state=0)
+kfold = model_selection.KFold(n_splits=num_folds, shuffle=True, random_state=RANDOM_STATE)
     
 # K-fold Cross Validation model evaluation
     
@@ -70,8 +79,8 @@ rec_per_fold = []
 f1_per_fold = []
 
 if FEATURE_IMPORTANCE:
-    gini_kfold_importances = np.empty(shape=[num_folds, 22])
-    perm_kfold_importances = np.empty(shape=[num_folds, 22])
+    gini_kfold_importances = np.empty(shape=[num_folds, number_of_features])
+    perm_kfold_importances = np.empty(shape=[num_folds, number_of_features])
     
 fold_no = 1
 for train_idx, test_idx in kfold.split(scores):
@@ -83,15 +92,17 @@ for train_idx, test_idx in kfold.split(scores):
 
     if POST_OP:
         if BINARY:
-            md = 2
-            ne = 245
+            #md = 9   #rs=0, good
+            #ne = 330 
+            md = 13
+            ne = 97
         else:
             md = 6
             ne = 482
     else:
         if BINARY:
-            md = 14
-            ne = 369
+            md = 13
+            ne = 97
         else:
             md = 16
             ne = 134
@@ -101,7 +112,8 @@ for train_idx, test_idx in kfold.split(scores):
         bootstrap=False,
         max_features=None,
         max_depth=md,
-        n_estimators=ne
+        n_estimators=ne,
+        random_state = RANDOM_STATE
         )
 
     clf.fit(X_train, y_train)
@@ -113,7 +125,7 @@ for train_idx, test_idx in kfold.split(scores):
         gini_kfold_importances[fold_no-1, :] = gini_fold_importances
         
         perm_fold_importances = permutation_importance(
-            clf, X_test, y_test, n_repeats=10, random_state=1, n_jobs=2
+            clf, X_test, y_test, n_repeats=10, random_state= RANDOM_STATE, n_jobs=2
             )
         perm_kfold_importances[fold_no-1, :] = perm_fold_importances.importances_mean
 

@@ -18,6 +18,11 @@ else:
 
 ch_df = pd.read_csv(os.path.join(DATA_DIR, "ch_all.csv"), sep=' ', dtype={'date':str})
 
+ch_df['timeInterval'] -= 1
+
+ch_df = ch_df[ch_df.timeInterval>0]
+
+
 new_df = pd.DataFrame()
 
 runs_dict = {
