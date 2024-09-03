@@ -37,8 +37,23 @@ def addPilot(new_df, df):
 
 date_df = df[df['date']=="231115"]
 
+# Per
+run_df = date_df[date_df.run==1]
+new_df = addPilot(new_df, run_df)
+
+# Christian
+run_df = date_df[date_df.run==2]
+new_df = addPilot(new_df, run_df)
+
+# Dan
+run_df = date_df[date_df.run==3]
+new_df = addPilot(new_df, run_df)
+
 # Fredrik
-Fredrik_df = df[df['date']=="230324"]
+Fredrik_df = date_df[date_df.run==4]
+date_df = df[df['date']=="230324"]
+Fredrik_df = pd.concat([Fredrik_df, date_df])
+
 date_df = df[df['date']=="230517"]
 Fredrik_df = pd.concat([Fredrik_df, date_df])
 

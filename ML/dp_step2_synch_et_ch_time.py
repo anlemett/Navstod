@@ -14,6 +14,7 @@ OUTPUT_DIR = "Data"
 sec_in_ms=0.000001
 timeIntervalDuration = 180 #sec
 
+#TODO: change to second?
 def getMinute(ms_num):
 
     return math.ceil((ms_num*sec_in_ms)/60)

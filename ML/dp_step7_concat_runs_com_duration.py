@@ -41,5 +41,23 @@ df = add_run(df, full_filename, 2)
 full_filename = os.path.join(DATA_DIR_230517, "com_duration_230517_run1.csv")
 df = add_run(df, full_filename, 1)
 
+full_filename = os.path.join(DATA_DIR_230517, "com_duration_230517_run2.csv")
+df = add_run(df, full_filename, 2)
+
+full_filename = os.path.join(DATA_DIR_230517, "com_duration_230517_run3.csv")
+df = add_run(df, full_filename, 3)
+
+full_filename = os.path.join(DATA_DIR_231115, "com_duration_231115_run1.csv")
+df = add_run(df, full_filename, 1)
+
+full_filename = os.path.join(DATA_DIR_231115, "com_duration_231115_run2.csv")
+df = add_run(df, full_filename, 2)
+
+full_filename = os.path.join(DATA_DIR_231115, "com_duration_231115_run3.csv")
+df = add_run(df, full_filename, 3)
+
+full_filename = os.path.join(DATA_DIR_231115, "com_duration_231115_run4.csv")
+df = add_run(df, full_filename, 4)
+
 full_filename = os.path.join(OUTPUT_DIR, "com_duration_all.csv")
 df.to_csv(full_filename, sep= ' ', header=True, index=False)

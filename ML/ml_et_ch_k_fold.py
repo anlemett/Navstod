@@ -24,8 +24,8 @@ RANDOM_STATE = 0
 BINARY = True
 #BINARY = False
 
-POST_OP = True
-#POST_OP = False
+#POST_OP = True
+POST_OP = False
 
 FEATURE_IMPORTANCE = True
 #FEATURE_IMPORTANCE = False
@@ -40,15 +40,15 @@ features = [
             'min_pup_diam_left', 'max_pup_diam_left',
             'mean_pup_diam_right', 'median_pup_diam_right', 'std_pup_diam_right',
             'min_pup_diam_right', 'max_pup_diam_right',
-            'mean_HR', 'median_HR', 'std_HR', 'min_HR', 'max_HR',
-            #'com_duration'
+            #'mean_HR', 'median_HR', 'std_HR', 'min_HR', 'max_HR',
+            'com_duration'
             ]
 
 number_of_features = len(features)
 
 #df = pd.read_csv(os.path.join(DATA_DIR, "ML_ET_CH_norm.csv"), sep=' ', dtype={'date':str})
-df = pd.read_csv(os.path.join(DATA_DIR, "ML_ET_HR_CH_norm.csv"), sep=' ', dtype={'date':str})
-#df = pd.read_csv(os.path.join(DATA_DIR, "ML_ET_CH_COM_norm.csv"), sep=' ', dtype={'date':str})
+#df = pd.read_csv(os.path.join(DATA_DIR, "ML_ET_HR_CH_norm.csv"), sep=' ', dtype={'date':str})
+df = pd.read_csv(os.path.join(DATA_DIR, "ML_ET_CH_COM_norm.csv"), sep=' ', dtype={'date':str})
 #df = pd.read_csv(os.path.join(DATA_DIR, "ML_ET_HR_COM_CH_norm.csv"), sep=' ', dtype={'date':str})
 
 if POST_OP:
