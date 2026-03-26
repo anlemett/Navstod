@@ -3,8 +3,7 @@ warnings.filterwarnings('ignore')
 
 import os
 
-DATA_DIR = os.path.join("..", "..")
-DATA_DIR = os.path.join(DATA_DIR, "240514_15")
+DATA_DIR = os.path.joinDATA_DIR = os.path.join("..", "..", "251029")
 FIG_DIR = 'Figures'
 
 import pandas as pd
@@ -12,15 +11,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 
-day = 1
-run_num = 1
-glass_num = 2
+run_num = 8
+post_op = False
 
-filename = "ET_CH_d" + str(day) + "_r" + str(run_num) + "_g" + str(glass_num) + ".csv"
+filename = "ET_CH_run" + str(run_num) + ".csv"
 full_filename = os.path.join(DATA_DIR, filename)
 
 df = pd.read_csv(full_filename, sep=' ', dtype={'date':str, 'score':int, 
-                                                    })
+                                                'post_op_score': int
+                                                })
 #score_df['score'] = score_df['score'].replace([0], 10)
 
 metrics = ['av_sac_duration', 'number_of_sac', 'av_fixation', 'av_pup_diameter']
@@ -31,13 +30,16 @@ for metric in metrics:
         
     time_intervals = list(df['timeInterval'])
 
-    scores = list(df['score'])
-            
     intervals_num = len(time_intervals)
+    
+    if post_op:
+        scores = list(df['post_op_score'])
+    else:
+        scores = list(df['score'])
 
     if len(scores) > intervals_num:
         scores = scores[0:intervals_num]
-
+    
     number_of_points = len(scores)
     print(number_of_points)
 
@@ -50,7 +52,10 @@ for metric in metrics:
 
     ax1.yaxis.get_major_locator().set_params(integer=True)
 
-    lns1 = ax1.plot(time_intervals, scores, color='r', label='scores')
+    if post_op:
+        lns1 = ax1.plot(time_intervals, scores, color='r', label='post op scores')
+    else:
+        lns1 = ax1.plot(time_intervals, scores, color='r', label='scores')
 
     lns2 = ax2.plot(time_intervals, metric_lst, color='g', label=metric,
                                 linestyle='dashed')
@@ -76,9 +81,12 @@ for metric in metrics:
 
     ax2.legend(lns, ["scores", metric_legend], loc='best')
 
-    filename = "ET_CH_d" + str(day) + "_r" + str(run_num) + "_g" + str(glass_num) + "_" + metric + '.png'
+    if post_op:
+        filename = "ET_CH_run" + str(run_num) + "_post_op_" + metric + '.png'
+    else:
+        filename = "ET_CH_run" + str(run_num) + "_" + metric + '.png'
     
-    subdir = "d" + str(day) + "_r" + str(run_num) + "_g" + str(glass_num)
+    subdir = "run" + str(run_num)
             
     dir = os.path.join(FIG_DIR, subdir)
     if not os.path.exists(dir):
@@ -88,6 +96,3 @@ for metric in metrics:
         os.mkdir(dir)
     full_filename = os.path.join(dir,filename)
     plt.savefig(full_filename)
-
-
-

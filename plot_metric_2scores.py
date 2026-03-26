@@ -4,7 +4,8 @@ warnings.filterwarnings('ignore')
 import os
 
 #date = "230324"
-date = "230517"
+#date = "230517"
+date = "251029"
 DATA_DIR = os.path.join("..", date)
 
 import pandas as pd
@@ -13,7 +14,7 @@ import math
 from statistics import mean
 import matplotlib.pyplot as plt
 
-run_num = 3
+run_num = 1
 
 #filename = "av_metrics" + str(run_num) + ".csv"
 filename = "av_metrics_" + date + "_run" + str(run_num) + ".csv"
@@ -43,6 +44,8 @@ elif date == "230517":
         filename = "Exp2_Fredrick2_230517_094640.csv"
     else:
         filename = "Exp3_Fredrick_230517_111130.csv"
+elif date == "251029":
+    filename = "WL_run" + str(run_num) + ".csv"
 
 full_filename = os.path.join(DATA_DIR, filename)
 

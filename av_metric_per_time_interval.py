@@ -5,7 +5,8 @@ import os
 
 #date = "230324"
 #date = "230517"
-date = "231115"
+#date = "231115"
+date = "251029"
 DATA_DIR = os.path.join("..", date)
 
 import pandas as pd
@@ -13,7 +14,7 @@ import math
 from statistics import mean
 from itertools import groupby
 
-run_num = 4
+run_num = 1
 
 if date == "230324":
     filename = "Run_" + str(run_num) +"_attention.xlsx"
@@ -33,7 +34,8 @@ elif date == "231115":
         filename = "Recording55.xlsx"
     else:
         filename = "Recording56.xlsx"
-
+elif date == "251029":
+    filename = "ET_run" + str(run_num) + ".xlsx"
 
 output_filename = "av_metrics_" + date + "_run" + str(run_num) + ".csv"
 
@@ -51,8 +53,10 @@ def getTimeInterval(ms_num):
 
 df['timeInterval'] = df.apply(lambda row: getTimeInterval(row['Computer timestamp']), axis=1)
 
-df = df[['Computer timestamp', 'timeInterval', 'Pupil diameter filtered', 'Gaze event duration',
-         'Eye movement type']]
+df = df[['Computer timestamp', 'timeInterval', 'Pupil diameter filtered',
+        #'Gaze event duration',
+        'Eye movement event duration',
+        'Eye movement type']]
 
 
 last_timestamp = list(df['Computer timestamp'])[-1]
@@ -68,7 +72,8 @@ for ti in range (1, last_timeinterval + 1):
     
     fixation_df = ti_df[ti_df['Eye movement type']=='Fixation']
     
-    lst = list(fixation_df['Gaze event duration'].dropna())
+    #lst = list(fixation_df['Gaze event duration'].dropna())
+    lst = list(fixation_df['Eye movement event duration'].dropna())
 
     # removing consecutive duplicates
     interval_fixation = [i[0] for i in groupby(lst)]
@@ -82,7 +87,8 @@ for ti in range (1, last_timeinterval + 1):
     if 'Saccade' in set(ti_df['Eye movement type']):
 
         saccades_df = ti_df[ti_df['Eye movement type']=='Saccade']
-        lst = list(saccades_df['Gaze event duration'].dropna())
+        #lst = list(saccades_df['Gaze event duration'].dropna())
+        lst = list(saccades_df['Eye movement event duration'].dropna())
 
         # removing consecutive duplicates
         saccades_list = [i[0] for i in groupby(lst)]

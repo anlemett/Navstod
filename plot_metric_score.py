@@ -5,7 +5,8 @@ import os
 
 #date = "230324"
 #date = "230517"
-date = "231115"
+#date = "231115"
+date = "251029"
 DATA_DIR = os.path.join("..", date)
 
 import pandas as pd
@@ -25,10 +26,10 @@ full_filename = os.path.join(DATA_DIR, filename)
 
 metric_df = pd.read_csv(full_filename, sep=' ')
 
-#metric = 'av_fixation'
+metric = 'av_fixation'
 #metric = 'av_pup_diameter'
 #metric = 'av_sac_duration'
-metric = 'number_of_sac'
+#metric = 'number_of_sac'
 
 metrics = list(metric_df[metric])
 #metrics.pop()
@@ -56,12 +57,15 @@ elif date == "231115":
         filename = "Run3_pilot_Dan_Krabbe_231115_140800.csv"
     else:
         filename = "Run4_pilot_Fredrik_231115_151734.csv"
+elif date == "251029":
+    filename = "WL_run" + str(run_num) + ".csv"
 
 full_filename = os.path.join(DATA_DIR, filename)
 
 score_df = pd.read_csv(full_filename, sep=' ',index_col=False)
 score_df.score = score_df.score.astype(int)
-score_df.post_op_score = score_df.post_op_score.astype(int)
+if post_op:
+    score_df.post_op_score = score_df.post_op_score.astype(int)
 #print(score_df.head(1))
 
 #score_df['score'] = score_df['score'].replace([0], 10)

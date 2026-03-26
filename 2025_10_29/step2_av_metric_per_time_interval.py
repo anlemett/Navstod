@@ -3,24 +3,24 @@ warnings.filterwarnings('ignore')
 
 import os
 
-DATA_DIR = os.path.join("..", "..")
-DATA_DIR = os.path.join(DATA_DIR, "240514_15")
+DATA_DIR = os.path.joinDATA_DIR = os.path.join("..", "..", "251029")
+print(os.getcwd())
+if os.path.isdir(DATA_DIR):
+    print("Directory exists")
+else:
+    print("Directory does not exist")
 
 import pandas as pd
 import math
 from statistics import mean
 from itertools import groupby
 
-day = 2
-run_num = 5
-glass_num = 1
+date = '251029'
+run_num = 8
 
-#May 14
-#Run 1 10:50 - 11:36 IMG 0006 Rickard 1 Anders E 1
+filename = "ET_synch_run" + str(run_num) + ".csv"
 
-filename = "ET_d" + str(day) + "_r" + str(run_num) + "_g" + str(glass_num) + ".csv"
-
-output_filename = "av_metrics" + "_d" + str(day) + "_r" + str(run_num) + "_g" + str(glass_num) + ".csv"
+output_filename = "av_metrics_run" + str(run_num) + ".csv"
 
 full_filename = os.path.join(DATA_DIR, filename)
 
@@ -38,7 +38,7 @@ def getTimeInterval(ms_num):
 
 df['timeInterval'] = df.apply(lambda row: getTimeInterval(row['Computer timestamp']), axis=1)
 
-df = df[['Computer timestamp', 'timeInterval', 'Pupil diameter filtered', 'Gaze event duration',
+df = df[['Computer timestamp', 'timeInterval', 'Pupil diameter filtered', 'Eye movement event duration',
          'Eye movement type']]
 
 
@@ -50,18 +50,13 @@ print(last_timeinterval)
 new_df = pd.DataFrame(columns=['date', 'timeInterval', 'av_pup_diameter', 'av_fixation',
                                'pup_diameter', 'fixation', 'number_of_sac', 'av_sac_duration'])
 
-if day == 1:
-    date = '240514'
-else:
-    date = '240515'
-
 for ti in range (1, last_timeinterval + 1):
     ti_df = df[df['timeInterval']==ti]
     #print(ti_df.head(1))
     
     fixation_df = ti_df[ti_df['Eye movement type']=='Fixation']
     
-    lst = list(fixation_df['Gaze event duration'].dropna())
+    lst = list(fixation_df['Eye movement event duration'].dropna())
 
     # removing consecutive duplicates
     interval_fixation = [i[0] for i in groupby(lst)]
@@ -75,7 +70,7 @@ for ti in range (1, last_timeinterval + 1):
     if 'Saccade' in set(ti_df['Eye movement type']):
 
         saccades_df = ti_df[ti_df['Eye movement type']=='Saccade']
-        lst = list(saccades_df['Gaze event duration'].dropna())
+        lst = list(saccades_df['Eye movement event duration'].dropna())
 
         # removing consecutive duplicates
         saccades_list = [i[0] for i in groupby(lst)]

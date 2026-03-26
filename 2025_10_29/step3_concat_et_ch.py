@@ -4,24 +4,23 @@ warnings.filterwarnings('ignore')
 import os
 import pandas as pd
 
-DATA_DIR = os.path.join("..", "..")
-DATA_DIR = os.path.join(DATA_DIR, "240514_15")
+DATA_DIR = os.path.joinDATA_DIR = os.path.join("..", "..", "251029")
+print(os.getcwd())
+if os.path.isdir(DATA_DIR):
+    print("Directory exists")
+else:
+    print("Directory does not exist")
 
-day = 1
-run_num = 3
-glass_num = 1
+run_num = 8
 
-#May 14
-#Run 1 10:50 - 11:36 IMG 0006 Rickard 1 Anders E 1
-
-filename = "av_metrics_d" + str(day) + "_r" + str(run_num) + "_g" + str(glass_num) + ".csv"
+filename = "av_metrics_run" + str(run_num) + ".csv"
 
 full_filename = os.path.join(DATA_DIR, filename)
 
 et_df = pd.read_csv(full_filename, sep=' ',
-                        dtype={'date':str})
+                    dtype={'date':str})
 
-filename = "scores_d" + str(day) + "_r" + str(run_num) + "_g" + str(glass_num) + ".csv"
+filename = "WL_run" + str(run_num) + ".csv"
 
 full_filename = os.path.join(DATA_DIR, filename)
 
@@ -34,14 +33,13 @@ ch_df['timeInterval'] = lst
 #ch_df['timeInterval'] -= 1
 #ch_df = ch_df[ch_df.timeInterval>0]
 
-
 new_df = pd.DataFrame()
 
 run_df = pd.merge(et_df, ch_df, how="inner", on=["date", "timeInterval"])
                           
 new_df = pd.concat([new_df, run_df])
 
-filename = "ET_CH_d" + str(day) + "_r" + str(run_num) + "_g" + str(glass_num) + ".csv"
+filename = "ET_CH_run" + str(run_num) + ".csv"
 full_filename = os.path.join(DATA_DIR, filename)
 
 new_df.to_csv(full_filename, sep=' ', encoding='utf-8',

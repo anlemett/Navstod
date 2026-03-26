@@ -5,8 +5,14 @@ import os
 import pandas as pd
 import math
 
-DATA_DIR = os.path.join("..", "..")
-DATA_DIR = os.path.join(DATA_DIR, "240514_15")
+run_num = 8
+
+DATA_DIR = os.path.joinDATA_DIR = os.path.join("..", "..", "251029")
+print(os.getcwd())
+if os.path.isdir(DATA_DIR):
+    print("Directory exists")
+else:
+    print("Directory does not exist")
 
 sec_in_ms=0.000001
 timeIntervalDuration = 180 #sec
@@ -22,17 +28,23 @@ def synchTime(df, num_of_seconds):
     
     return df[df.second>num_of_seconds]
 
-day = 2
-run_num = 5
-glass_num = 1
-num_of_sec = 9
 
-#May 14
-#Run 1 10:50 - 11:36 IMG 0006 Rickard 1 Anders E 1
+if (run_num == 1):
+    num_of_sec = 132
+elif (run_num == 2):
+    num_of_sec = 167
+elif (run_num == 4):
+    num_of_sec = 55
+elif (run_num == 8):
+    num_of_sec = 99
+else:
+    num_of_sec = 0
 
-filename = "ET_d" + str(day) + "_r" + str(run_num) + "_g" + str(glass_num) + ".xlsx"
 
-output_filename = "ET_d" + str(day) + "_r" + str(run_num) + "_g" + str(glass_num) + ".csv"
+
+filename = "ET_run" + str(run_num) + ".xlsx"
+
+output_filename = "ET_synch_run" + str(run_num) + ".csv"
 
 full_filename = os.path.join(DATA_DIR, filename)
 
